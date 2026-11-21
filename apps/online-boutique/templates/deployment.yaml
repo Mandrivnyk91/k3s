@@ -1,0 +1,76 @@
+{{- range $serviceName, $service := .Values.services }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $serviceName }}
+  labels:
+    app: {{ $serviceName }}
+    app.kubernetes.io/name: {{ $serviceName }}
+    app.kubernetes.io/component: {{ $service.component }}
+    app.kubernetes.io/part-of: boutique
+spec:
+{{- if $service.isCritical }}
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ $serviceName }}
+  template:
+    metadata:
+      labels:
+        app: {{ $serviceName }}
+        app.kubernetes.io/name: {{ $serviceName }}
+        app.kubernetes.io/component: {{ $service.component }}
+        app.kubernetes.io/part-of: boutique
+    spec:
+      {{- if $service.isCritical }}
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: {{ $serviceName }}
+      {{- end }}
+      serviceAccountName: {{ $serviceName }}
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: {{ $serviceName }}
+        image: "{{ $service.image }}:{{ $service.tag}}"
+        ports:
+        - containerPort: {{ $service.targetPort }}
+        {{- if $service.probes }}
+        {{- toYaml $service.probes | nindent 8 }}
+        {{- end }}
+        
+        # env vars
+        {{- $mergedEnv := merge (dict) ($service.env | default dict) ($.Values.globalEnv | default dict) }}
+        {{- if $mergedEnv }}
+        env:
+          {{- range $name, $value := $mergedEnv }}
+          - name: {{ $name }}
+            value: {{ $value | quote }}
+          {{- end }}
+        {{- end }}
+
+        #config mapa
+        {{- if $service.configMapName }}
+        envFrom:
+          - configMapRef:
+              name: {{ include "helm.fullname" $ }}-{{ $service.configMapName }}
+        {{- end }}
+
+        #requests / limits
+        resources:
+          {{- toYaml $.Values.resources | nindent 10 }}
+---
+{{- end }}

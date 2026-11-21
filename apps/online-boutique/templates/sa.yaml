@@ -1,0 +1,7 @@
+{{- range $serviceName, $service := .Values.services }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ $serviceName }}
+---
+{{- end }}

@@ -1,0 +1,25 @@
+{{- if .Values.namespaceResources.quota.enabled }}
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: {{ include "helm.fullname" . }}-quota
+  namespace: {{ .Release.Namespace }}
+spec:
+  hard:
+    {{- toYaml .Values.namespaceResources.quota.hard | nindent 4 }}
+{{- end }}
+---
+{{- if .Values.namespaceResources.limitRange.enabled }}
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: {{ include "helm.fullname" . }}-limits
+  namespace: {{ .Release.Namespace }}
+spec:
+  limits:
+  - type: Container
+    default:
+      {{- toYaml .Values.namespaceResources.limitRange.default | nindent 6 }}
+    defaultRequest:
+      {{- toYaml .Values.namespaceResources.limitRange.defaultRequest | nindent 6 }}
+{{- end }}

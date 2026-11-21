@@ -1,0 +1,16 @@
+{{- range $serviceName, $service := .Values.services }}
+{{- if $service.isCritical }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ $serviceName }}-pdb
+  labels:
+    app.kubernetes.io/name: {{ $serviceName }}
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $serviceName }}
+---
+{{- end }}
+{{- end }}
