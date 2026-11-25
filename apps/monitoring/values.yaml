@@ -65,7 +65,7 @@ loki:
     replicas: 1
     persistence:
       enabled: true
-      storageClass: standart
+      storageClass: local-path
       size: 5Gi
 
   gateway:
