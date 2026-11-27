@@ -27,6 +27,7 @@ services:
     configMapName: global-config
     env:
       PORT: "8080"
+      OTEL_SERVICE_NAME: "frontend"
     probes:
       readinessProbe:
         initialDelaySeconds: 10
@@ -55,6 +56,7 @@ services:
     targetPort: 9555
     env:
       PORT: "9555"
+      OTEL_SERVICE_NAME: "adservice"
     probes:
       readinessProbe:
         initialDelaySeconds: 20
@@ -77,6 +79,7 @@ services:
     targetPort: 7070
     env:
       REDIS_ADDR: "redis:6379"
+      OTEL_SERVICE_NAME: "cartservice"
     probes:
       readinessProbe:
         initialDelaySeconds: 20
@@ -99,6 +102,7 @@ services:
     targetPort: 5050
     env:
       PORT: "5050"
+      OTEL_SERVICE_NAME: "checkoutservice"
     configMapName: global-config
     probes:
       readinessProbe:
@@ -123,6 +127,7 @@ services:
     env:
       PORT: "7000"
       DISABLE_PROFILER: "1"
+      OTEL_SERVICE_NAME: "currencyservice"
     probes:
       readinessProbe:
         initialDelaySeconds: 20
@@ -146,6 +151,7 @@ services:
     env:
       PORT: "8080"
       DISABLE_PROFILER: "1"
+      OTEL_SERVICE_NAME: "emailservice"
     probes:
       readinessProbe:
         initialDelaySeconds: 20
@@ -169,6 +175,7 @@ services:
     env:
       PORT: "50051"
       DISABLE_PROFILER: "1"
+      OTEL_SERVICE_NAME: "paymentservice"
     probes:
       readinessProbe:
         initialDelaySeconds: 20
@@ -192,6 +199,7 @@ services:
     env:
       PORT: "3550"
       DISABLE_PROFILER: "1"
+      OTEL_SERVICE_NAME: "productcatalogservice"
     probes:
       readinessProbe:
         initialDelaySeconds: 20
@@ -216,6 +224,7 @@ services:
       PORT: "8080"
       DISABLE_PROFILER: "1"
       PRODUCT_CATALOG_SERVICE_ADDR: "productcatalogservice:3550"
+      OTEL_SERVICE_NAME: "recommendationservice"
     probes:
       readinessProbe:
         initialDelaySeconds: 20
@@ -239,6 +248,7 @@ services:
     env:
       PORT: "50051"
       DISABLE_PROFILER: "1"
+      OTEL_SERVICE_NAME: "shippingservice"
     probes:
       readinessProbe:
         initialDelaySeconds: 20
