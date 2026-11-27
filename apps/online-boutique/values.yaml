@@ -268,9 +268,9 @@ namespaceResources:
     hard:
       requests.cpu: "4"
       requests.memory: 8Gi
-      limits.cpu: "8"
-      limits.memory: 16Gi
-      pods: "20"
+      limits.cpu: "12"
+      limits.memory: 36Gi
+      pods: "40"
   limitRange:
     enabled: true
     default:

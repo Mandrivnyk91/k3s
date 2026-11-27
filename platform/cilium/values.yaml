@@ -1,0 +1,14 @@
+gatewayAPI:
+  enabled: true
+ipam:
+  mode: kubernetes
+k8sServiceHost: 10.10.10.11
+k8sServicePort: 6443
+kubeProxyReplacement: true
+l2announcements:
+  enabled: true
+# envoy:
+#   prometheus:
+#     enabled: true
+#     serviceMonitor:
+#       enabled: true
