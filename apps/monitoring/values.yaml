@@ -25,6 +25,7 @@ kube-prometheus-stack:
             customQuery: '{app="${__tags.app}"} |= "${__trace.id}"'
   prometheus:
     prometheusSpec:
+      enableRemoteWriteReceiver: true
       serviceMonitorSelectorNilUsesHelmValues: false
 
 loki:
@@ -83,11 +84,14 @@ tempo:
   tempo:
     metricsGenerator:
       enabled: true
+      remoteWriteUrl: http://monitoring-kube-prometheus-prometheus.monitoring:9090/api/v1/write
     overrides:
       defaults:
         metrics_generator:
           processors:
             - local-blocks
+            - span-metrics
+            - service-graphs
 
 alloy:
   enabled: true
